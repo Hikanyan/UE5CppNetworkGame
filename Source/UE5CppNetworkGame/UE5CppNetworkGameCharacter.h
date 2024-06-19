@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "InputActionValue.h"
+#include "Interfaces/OnlineSessionInterface.h"
 #include "UE5CppNetworkGameCharacter.generated.h"
 
 
@@ -39,7 +40,7 @@ class AUE5CppNetworkGameCharacter : public ACharacter
 
 public:
 	AUE5CppNetworkGameCharacter();
-	
+	IOnlineSessionPtr OnlineSessionInterface;
 
 protected:
 

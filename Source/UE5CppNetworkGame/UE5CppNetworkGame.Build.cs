@@ -10,8 +10,7 @@ public class UE5CppNetworkGame : ModuleRules
 
 		PublicDependencyModuleNames.AddRange(new string[]
 		{
-			"Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "EnhancedInput",
-			"OnlineSubsystemSteam", "OnlineSubsystem"
+			"Core", "CoreUObject", "Engine", "InputCore", "HeadMountedDisplay", "OnlineSubsystemSteam", "OnlineSubsystem"
 		});
 	}
 }
