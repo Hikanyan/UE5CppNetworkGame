@@ -14,7 +14,9 @@ AMovingPlatform::AMovingPlatform()
 void AMovingPlatform::BeginPlay()
 {
 	Super::BeginPlay();
+	StartPoint = GetActorLocation();
 	MyPoint = GetActorLocation();
+	LocalEndPoint = StartPoint + GetTransform().TransformVector(LocalEndPoint); 
 }
 
 // Called every frame
@@ -22,13 +24,31 @@ void AMovingPlatform::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	// 5秒たったら進む方向を反転する
-	if (CurrentTime >= TimeToMove)
+
+	// TODO:5秒たったら進む方向を反転する
+	// if (CurrentTime >= TimeToMove)
+	// {
+	// 	Speed *= -1;
+	// 	CurrentTime = 0.0f;
+	// }
+
+
+	// TODO:スタート地点とそこまで到達するまでの時間を指定して、その時間で移動する
+	if (LocalEndPoint != FVector(0, 0, 0))
 	{
-		Speed *= -1;
-		CurrentTime = 0.0f;
+		CurrentTime += DeltaTime;
+
+		float Alpha = FMath::Clamp(CurrentTime / TimeToMove, 0.0f, 1.0f);
+		MyPoint = FMath::Lerp(StartPoint, LocalEndPoint, Alpha);
+
+		SetActorLocation(MyPoint);
+
+		if (CurrentTime >= TimeToMove)
+		{
+			CurrentTime = 0.0f;
+			FVector Temp = StartPoint;
+			StartPoint = LocalEndPoint;
+			LocalEndPoint = Temp;
+		}
 	}
-	CurrentTime += DeltaTime;
-	MyPoint += MoveVelocity * Speed * DeltaTime;
-	SetActorLocation(MyPoint);
 }
