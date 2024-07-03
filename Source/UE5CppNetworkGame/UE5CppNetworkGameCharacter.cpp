@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "OnlineSubsystem.h"
+#include "OnlineSubsystemUtils.h"
+#include "Engine/Engine.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AUE5CppNetworkGameCharacter
@@ -51,21 +53,19 @@ AUE5CppNetworkGameCharacter::AUE5CppNetworkGameCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
+	UWorld* const World = GetWorld();
 	IOnlineSubsystem* OnlineSubsystem = IOnlineSubsystem::Get();
-	if (OnlineSubsystem)
+	OnlineSessionInterface = Online::GetSessionInterface(World);
+	if (OnlineSubsystem && OnlineSessionInterface.IsValid() && GEngine)
 	{
-		OnlineSessionInterface = OnlineSubsystem->GetSessionInterface();
-		if (GEngine)
-		{
-			FString DebugMessage = FString::Printf(
-				TEXT("Found subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString());
+		FString DebugMessage = FString::Printf(
+			TEXT("Found subsystem %s"), *OnlineSubsystem->GetSubsystemName().ToString());
 
-			GEngine->AddOnScreenDebugMessage(
-				-1, 5.f,
-				FColor::Green,
-				DebugMessage
-			);
-		}
+		GEngine->AddOnScreenDebugMessage(
+			-1, 5.f,
+			FColor::Green,
+			DebugMessage
+		);
 	}
 }
 
@@ -77,8 +77,7 @@ void AUE5CppNetworkGameCharacter::BeginPlay()
 	//Add Input Mapping Context
 	if (APlayerController* PlayerController = Cast<APlayerController>(Controller))
 	{
-		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<
-			UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
+		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
 		}
@@ -98,12 +97,10 @@ void AUE5CppNetworkGameCharacter::SetupPlayerInputComponent(class UInputComponen
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
 
 		//Moving
-		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this,
-		                                   &AUE5CppNetworkGameCharacter::Move);
+		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AUE5CppNetworkGameCharacter::Move);
 
 		//Looking
-		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this,
-		                                   &AUE5CppNetworkGameCharacter::Look);
+		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUE5CppNetworkGameCharacter::Look);
 	}
 }
 
