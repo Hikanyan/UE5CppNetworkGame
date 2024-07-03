@@ -62,7 +62,6 @@ public:
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 
-protected:
 	UFUNCTION(BlueprintCallable)
 	void CreateGameSession();
 	void OnCreateSessionComplete(FName SessionName, bool bWasSuccessful);

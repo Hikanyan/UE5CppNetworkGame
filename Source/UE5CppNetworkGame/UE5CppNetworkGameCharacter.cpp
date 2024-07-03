@@ -137,7 +137,7 @@ void AUE5CppNetworkGameCharacter::OnCreateSessionComplete(FName SessionName, boo
         UWorld* World = GetWorld();
         if (World)
         {
-            World->ServerTravel(FString("/Game/ThirdPerson/Maps/Lobby?Listen"));  
+            World->ServerTravel(FString("/Game/HikanyanLaboratory/Scene/Lobby?Listen"));  
         }
     }
     else {
