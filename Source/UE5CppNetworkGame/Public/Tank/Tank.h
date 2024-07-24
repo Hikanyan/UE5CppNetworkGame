@@ -34,6 +34,9 @@ private:
 	TSoftObjectPtr<UInputMappingContext> InputMapping;
 	UPROPERTY(EditAnywhere, Category = "Input")
 	class UInputAction* MoveAction;
+	UPROPERTY(EditAnywhere, Category = "Movement")
+	float Speed = 200;
+
 
 	void PressedAxis(const FInputActionValue& Value);
 };

@@ -10,6 +10,8 @@
 #include "InputAction.h"
 #include <Kismet/KismetSystemLibrary.h>
 
+#include "Kismet/GameplayStatics.h"
+
 
 ATank::ATank()
 {
@@ -29,8 +31,11 @@ void ATank::PressedAxis(const FInputActionValue& Value)
 {
 	FVector2D v = Value.Get<FVector2D>();
 	FVector DeltaLocation = FVector::ZeroVector;
-	DeltaLocation.X = v.Y;
-	AddActorLocalOffset(DeltaLocation);
+	DeltaLocation.X = v.Y * Speed * UGameplayStatics::GetWorldDeltaSeconds(this);
+	AddActorLocalOffset(DeltaLocation, true);
+	FVector DeltaRotaion = FVector::ZeroVector;
+	DeltaRotaion.Y = v.X * Speed * UGameplayStatics::GetWorldDeltaSeconds(this);;
+	AddActorLocalOffset(DeltaRotaion, true);
 	UKismetSystemLibrary::PrintString(this, FString::Printf(TEXT("X:%f Y:%f"), v.X, v.Y), true, true,
 	                                  FColor::Cyan, 10.0f, TEXT("None"));
 }
